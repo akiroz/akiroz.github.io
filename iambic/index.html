@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Morse Keyer</title>
+    <style>
+        i {
+            width: 0.8rem; height: 0.8rem; border-radius: 0.4rem;
+            display: inline-block; background-color: rgb(142, 142, 142);
+        }
+    </style>
+</head>
+<body style="font-family: Arial, Helvetica, sans-serif;">
+    <fieldset>
+        <legend>Keyer</legend>
+        <label><input name="wpm" type="number" value="15" style="width: 3rem;"> WPM |</label>
+        <label><input name="swapKeys" type="checkbox"> Swap Keys |</label>
+        <label><i id="i-dit"></i> Dit</label>
+        <label><i id="i-dah"></i> Dah</label>
+        <label><i id="i-tx"></i> TX</label>
+    </fieldset>
+    <fieldset>
+        <legend>Output</legend>
+        <button id="clear">Clear</button>
+        <div style="display: flex; flex-direction: row;">
+            <pre class="text" style="min-width: 10rem; border-right: 1px solid #000;"></pre>
+            <pre class="code" style="margin-left: 1rem;"></pre>
+        </div>
+    </fieldset>
+    <script src="index.js"></script>
+</body>
+</html>
