@@ -59,6 +59,13 @@ const morseDecode = {
 
 document.querySelector("input[name=swapKeys]").addEventListener("change", ({ target }) => {
     swapKeys = target.checked;
+    document.querySelector("#key-dit").textContent = swapKeys ? "X/." : "Z/,";
+    document.querySelector("#key-dah").textContent = swapKeys ? "Z/," : "X/.";
+});
+
+let modeB = false;
+document.querySelector("input[name=modeB]").addEventListener("change", ({ target }) => {
+    modeB = target.checked;
 });
 
 let wpm = 15;
@@ -106,7 +113,7 @@ class Keyer {
     dah = false;
     prevKey = null;
     nextKey = null;
-    idleUnits = 0;
+    idleUnits = 7;
     code = "";
     modulator = new Modulator();
 
@@ -175,6 +182,11 @@ class Keyer {
                 currKey = "-";
             } else {
                 const iu = this.idleUnits++;
+                if(iu < 1 && this.idleUnits >= 1 && modeB) {
+                    if(this.prevKey === ".") await this.append("-");
+                    if(this.prevKey === "-") await this.append(".");
+                    continue;
+                }
                 if(iu < 3 && this.idleUnits >= 3) this.append(" ");
                 if(iu < 7 && this.idleUnits >= 7) this.append("\n");
                 await this.timeout(1);
