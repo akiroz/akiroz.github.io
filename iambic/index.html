@@ -8,6 +8,12 @@
             width: 0.8rem; height: 0.8rem; border-radius: 0.4rem;
             display: inline-block; background-color: rgb(142, 142, 142);
         }
+        pre.text {
+            min-width: 10rem;
+            border-right: 1px solid #000;
+            padding-right: 1rem;
+            margin-right: 1rem;
+        }
     </style>
 </head>
 <body style="font-family: Arial, Helvetica, sans-serif;">
@@ -35,8 +41,8 @@
         <legend>Output</legend>
         <button id="clear">Clear</button>
         <div style="display: flex; flex-direction: row;">
-            <pre class="text" style="min-width: 10rem; border-right: 1px solid #000;"></pre>
-            <pre class="code" style="margin-left: 1rem;"></pre>
+            <pre class="text"></pre>
+            <pre class="code"></pre>
         </div>
     </fieldset>
     <script src="index.js"></script>
