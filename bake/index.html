@@ -113,8 +113,10 @@
         }
 
         document.querySelector(`#profile`).addEventListener("change", applyProfile);
-        if(!document.querySelector(`#total input`).value) applyProfile();
         
+        // Handle refresh
+        if(document.querySelector(`#total input`).value) calc();
+        else applyProfile();
     </script>
 </body>
 </html>
