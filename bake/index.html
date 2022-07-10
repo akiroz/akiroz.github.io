@@ -34,12 +34,12 @@
                     <td><input type="number">g</td>
                 </tr>
                 <tr id="hydration">
-                    <td>Target Hydration</td>
+                    <td>Hydration / Water</td>
                     <td><input type="number" min="1" max="100">%</td>
                     <td></td>
                 </tr>
                 <tr id="flour">
-                    <td></td>
+                    <td>Flour</td>
                     <td></td>
                     <td></td>
                 </tr>
@@ -89,8 +89,8 @@
             const additionalWater = totalWater - (levainTotal - levainFlour) - oil;
             const salt = (args.salt/100) * additionalFlour;
 
-            document.querySelector(`#hydration td:last-child`).textContent = `${Math.round(additionalWater)}g Water`;
-            document.querySelector(`#flour td:last-child`).textContent = `${Math.round(additionalFlour)}g Flour`;
+            document.querySelector(`#hydration td:last-child`).textContent = `${Math.round(additionalWater)}g`;
+            document.querySelector(`#flour td:last-child`).textContent = `${Math.round(additionalFlour)}g`;
             document.querySelector(`#levain td:last-child`).textContent = `${Math.round(levainTotal)}g`;
             document.querySelector(`#oil td:last-child`).textContent = `${Math.round(oil)}g`;
             document.querySelector(`#salt td:last-child`).textContent = `${Math.round(salt)}g`;
@@ -106,7 +106,7 @@
                 pizza: { total: 500, hydration: 60, levain: 20, lvh: 100, oil: 3, salt: 2.2 },
                 "1:1:1": { total: 100, hydration: 100, levain: 100, lvh: 100, oil: 0, salt: 0 },
                 "1:2:2": { total: 100, hydration: 100, levain: 50, lvh: 100, oil: 0, salt: 0 },
-                dry: { total: 100, hydration: 50, levain: 100, lvh: 100, oil: 0, salt: 0 },
+                dry: { total: 100, hydration: 50, levain: 200, lvh: 100, oil: 0, salt: 0 },
                 poolish: { total: 100, hydration: 100, levain: 100, lvh: 50, oil: 0, salt: 0 },
             };
             for(let [k, v] of Object.entries(profile[document.querySelector("#profile").value])) {
