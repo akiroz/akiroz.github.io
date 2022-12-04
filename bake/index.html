@@ -8,7 +8,7 @@
     <style>
         body { padding: 1.5rem; }
         input { width: 5rem; }
-        select { width: 7rem; }
+        select { width: 8rem; }
     </style>
 </head>
 <body>
@@ -25,6 +25,8 @@
                             <option value="pizza">Pizza</option>
                             <option value="ciabatta">Ciabatta</option>
                             <option value="naan">Naan</option>
+                            <option value="crossant-dough">Crossant Dough</option>
+                            <option value="crossant-butter">Crossant Butter</option>
                             <option value="poolish">Poolish Starter</option>
                             <option value="dry">Dry Starter</option>
                         </select>
@@ -64,12 +66,28 @@
                     <td><input type="number">%</td>
                     <td></td>
                 </tr>
+                <tr id="sugar">
+                    <td>Sugar</td>
+                    <td><input type="number">%</td>
+                    <td></td>
+                </tr>
             </tbody>
         </table>
         <div id="note"></div>
     </fieldset>
     <script>
-        const inputs = ["total", "hydration", "levain", "lvh", "oil", "salt"];
+        const inputs = ["total", "hydration", "levain", "lvh", "oil", "salt", "sugar"];
+        const profile = {
+            sourdough: { total: 500, hydration: 68, levain: 20, lvh: 100, oil: 0, salt: 2, sugar: 0, note: "" },
+            baguette: { total: 600, hydration: 73, levain: 20, lvh: 100, oil: 0, salt: 1.8, sugar: 0, note: "200g / 38cm" },
+            ciabatta: { total: 500, hydration: 85, levain: 20, lvh: 100, oil: 0, salt: 3, sugar: 0, note: "" },
+            pizza: { total: 500, hydration: 60, levain: 20, lvh: 100, oil: 3, salt: 2.2, sugar: 0, note: "250g / 12in" },
+            naan: { total: 600, hydration: 70, levain: 20, lvh: 100, oil: 0, salt: 2, sugar: 0, note: "water -> milk" },
+            "crossant-dough": { total: 570, hydration: 65, levain: 20, lvh: 100, oil: 0, salt: 1.5, sugar: 3.5, note: "Water: half milk" },
+            "crossant-butter": { total: 230, hydration: 730, levain: 0, lvh: 100, oil: 730, salt: 0, sugar: 0, note: "Total ~40% of dough" },
+            dry: { total: 100, hydration: 50, levain: 200, lvh: 100, oil: 0, salt: 0, sugar: 0, note: "" },
+            poolish: { total: 100, hydration: 100, levain: 100, lvh: 50, oil: 0, salt: 0, sugar: 0, note: "" },
+        };
 
         function calc() {
             const args = {};
@@ -90,12 +108,16 @@
             const oil = (args.oil/100) * additionalFlour;
             const additionalWater = totalWater - (levainTotal - levainFlour) - oil;
             const salt = (args.salt/100) * additionalFlour;
+            const sugar = (args.sugar/100) * additionalFlour;
+            const { note } = profile[document.querySelector("#profile").value];
 
             document.querySelector(`#hydration td:last-child`).textContent = `${Math.round(additionalWater)}g`;
             document.querySelector(`#flour td:last-child`).textContent = `${Math.round(additionalFlour)}g`;
             document.querySelector(`#levain td:last-child`).textContent = `${Math.round(levainTotal)}g`;
             document.querySelector(`#oil td:last-child`).textContent = `${Math.round(oil)}g`;
             document.querySelector(`#salt td:last-child`).textContent = `${Math.round(salt)}g`;
+            document.querySelector(`#sugar td:last-child`).textContent = `${Math.round(sugar)}g`;
+            document.querySelector(`#note`).textContent = `Notes: ${note}`;
         }
         
         for(let i of inputs) {
@@ -103,15 +125,6 @@
         }
 
         function applyProfile() {
-            const profile = {
-                sourdough: { total: 500, hydration: 68, levain: 20, lvh: 100, oil: 0, salt: 2, note: "" },
-                baguette: { total: 600, hydration: 73, levain: 20, lvh: 100, oil: 0, salt: 1.8, note: "200g / 38cm" },
-                ciabatta: { total: 500, hydration: 85, levain: 20, lvh: 100, oil: 0, salt: 3, note: "" },
-                pizza: { total: 500, hydration: 60, levain: 20, lvh: 100, oil: 3, salt: 2.2, note: "250g / 12in" },
-                naan: { total: 600, hydration: 70, levain: 20, lvh: 100, oil: 0, salt: 2, note: "water -> milk" },
-                dry: { total: 100, hydration: 50, levain: 200, lvh: 100, oil: 0, salt: 0, note: "" },
-                poolish: { total: 100, hydration: 100, levain: 100, lvh: 50, oil: 0, salt: 0, note: "" },
-            };
             for(let [k, v] of Object.entries(profile[document.querySelector("#profile").value])) {
                 if(k === "note") document.querySelector(`#note`).textContent = `Notes: ${v}`;
                 else document.querySelector(`#${k} input`).value = v;
