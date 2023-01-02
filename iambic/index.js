@@ -7,13 +7,12 @@ class Modulator {
     band = this.actx.createBiquadFilter();
     
     constructor() {
-        this.osc.frequency.value = 550;
+        this.setFreq(750);
         this.osc.start();
         this.osc.connect(this.gain);
         this.gain.gain.value = 0;
         this.gain.connect(this.band);
         this.band.type = "bandpass";
-        this.band.frequency.value = 550;
         this.band.Q.value = 3;
         this.band.connect(this.actx.destination);
     }
@@ -157,16 +156,26 @@ const morseCode = {
     "--..--":","
 };
 
-const modulator = new Modulator();
+let modulator = null;
 const keyer = new Keyer();
 
+function getModulator() {
+    if(modulator) return modulator;
+    const freq = parseInt(document.querySelector("input[name=freq]").value);
+    modulator = new Modulator();
+    modulator.enable = document.querySelector("input[name=modEn]").checked;
+    if(Number.isFinite(freq)) modulator.setFreq(freq);
+    return modulator;
+
+}
+
 keyer.onTxStart = () => {
-    modulator.output(true);
+    getModulator().output(true);
     document.querySelector("#i-tx").style.backgroundColor = "rgb(52, 199, 89)";
 }
 
 keyer.onTxStop = () => {
-    modulator.output(false);
+    getModulator().output(false);
     document.querySelector("#i-tx").style.backgroundColor = "rgb(142, 142, 142)";
 }
 
@@ -189,12 +198,12 @@ document.querySelector("input[name=wpm]").addEventListener("change", ({ target }
 });
 
 document.querySelector("input[name=modEn]").addEventListener("change", ({ target }) => {
-    modulator.enable = target.checked;
+    getModulator().enable = target.checked;
 });
 
 document.querySelector("input[name=freq]").addEventListener("change", ({ target }) => {
     const val = parseInt(target.value);
-    if(Number.isFinite(val)) modulator.setFreq(val);
+    if(Number.isFinite(val)) getModulator().setFreq(val);
 });
 
 document.querySelector("#clear").addEventListener("click", () => {
@@ -237,3 +246,25 @@ document.body.addEventListener("keyup", ({ code }) => {
     if(mapKey(code) === "-") keyer.dah = false;
     syncIndicators(keyer);
 });
+
+
+document.querySelector("button[name=encoderSend]").addEventListener("click", async () => {
+    input = document.querySelector("input[name=encoderInput]")
+    input.value = input.value.replace(/[^A-Za-z-0-9 !\.,]/g, "").toUpperCase();
+    const morse = Object.entries(morseCode).reduce((acc, [k,v]) => (acc[v] = k, acc), {});
+    for(let c of input.value.split("")) {
+        if(c === " ") {
+            await keyer.timeout(7);
+            await keyer.append("\n");
+            continue;
+        }
+        for(let m of morse[c].split("")) {
+            await keyer.append(m);
+        }
+        await keyer.timeout(3);
+        await keyer.append(" ");
+    }
+    await keyer.append("\n");
+});
+
+
